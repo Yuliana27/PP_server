@@ -1,0 +1,396 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "--Service for to save and edit rating of students--",
+    "version": "1.0.0",
+    "title": "Rating of students",
+    "contact": {
+      "email": "ylilav55547@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "Student",
+      "description": "Everything about students"
+    },
+    {
+      "name": "Rating of the best students",
+      "description": "Access to top-5"
+    },
+    {
+      "name": "user",
+      "description": "Operations about user"
+    }
+  ],
+  "paths": {
+    "/Students": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "Add a new student to the rating",
+        "description": "",
+        "operationId": "addStudent",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Student object that needs to be added to the rating",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Student"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "get": {
+        "summary": "List all students",
+        "operationId": "listStudents",
+        "tags": [
+          "Student"
+        ],
+        "parameters": [
+          {
+            "name": "Limit_students",
+            "in": "query",
+            "description": "How many objects to return at one time (max 200)",
+            "required": false,
+            "type": "integer",
+            "maximum": 200,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maximum 200"
+          }
+        }
+      }
+    },
+    "/Student/{StudentId}": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "Updates a student in the rating with form data",
+        "description": "",
+        "operationId": "updateStudentWithForm",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "StudentId",
+            "in": "path",
+            "description": "ID of student that needs to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "New average mark of student",
+            "in": "formData",
+            "description": "Updated mark of the student",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "Delete a student from rating",
+        "description": "",
+        "operationId": "deleteStudent",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api_key",
+            "in": "header",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "StudentId",
+            "in": "path",
+            "description": " ID of student to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Student not found"
+          }
+        },
+        "security": [
+          {
+            "ratingstudents_auth": [
+              "write:students",
+              "read:students"
+            ]
+          }
+        ]
+      }
+    },
+    "/Student/{StudentId}/uploadImage": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "Uploads an photo of student",
+        "description": "",
+        "operationId": "uploadFile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "StudentId",
+            "in": "path",
+            "description": "ID of student to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "additionalMetadata",
+            "in": "formData",
+            "description": "Additional data to pass to server",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "File_photo",
+            "in": "formData",
+            "description": "File to upload",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully !"
+          }
+        },
+        "security": [
+          {
+            "ratingstudents_auth": [
+              "write:students",
+              "read:students"
+            ]
+          }
+        ]
+      }
+    },
+    "/Rating of the best students/top5": {
+      "get": {
+        "tags": [
+          "Rating of the best students"
+        ],
+        "summary": "Returns top-5 students",
+        "description": "TOP-5 students",
+        "operationId": "getInventory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully !",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Successfully !"
+          }
+        }
+      }
+    },
+    "/user/{username}": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ratingstudents_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://studentstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:students": "Modify students in your account",
+        "read:students": "Read your students"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "userStatus": {
+          "type": "integer",
+          "format": "int32",
+          "description": "User Status"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "Student": {
+      "type": "object",
+      "required": [
+        "name",
+        "photoUrls"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Name": {
+          "type": "string",
+          "example": "Lavryk Yuliana Olegivna"
+        },
+        "photoUrls": {
+          "type": "array",
+          "xml": {
+            "name": "photoUrl",
+            "wrapped": true
+          },
+          "items": {
+            "type": "string"
+          }
+        },
+        "Average mark": {
+          "type": "integer",
+          "format": "int64",
+          "example": "80,01"
+        }
+      },
+      "xml": {
+        "name": "Student"
+      }
+    }
+  }
+}
